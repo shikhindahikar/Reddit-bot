@@ -10,15 +10,16 @@ import datetime
 from statistics import mean
 import re
 
-grade_types = {'PO01':1, 'FR02':2, 'AG03':3, 'G04':4, 'G06':6, 'VG08':8, 'VG10':10, 'F12':12, 'F15':15, 'VF20':20, 'VF25':25, 'VF35':35, 'VF30':30, 'XF40':40, 'XF45':45, 'AU50':50, 'AU53':53, 'AU55':55, 'AU58':58, 'MS60':60, 'MS61':61, 'MS62':62, 'MS63':63, 'MS64':64, 'MS65':65, 'MS66':66, 'MS67':67, 'MS68':68, 'MS69':69, 'MS70':70, 'PO':1, 'Poor':1, 'FR':2, 'AG':3, 'G':4, 'Good':4, 'VG':8, 'F':12, 'Fine':12, 'VF':20, 'XF':40, 'AU':50,'BU':60, 'MS':60}
+grade_types = {'PO01':1, 'FR02':2, 'AG03':3, 'G04':4, 'G06':6, 'VG08':8, 'VG10':10, 'F12':12, 'F15':15, 'VF20':20, 'VF25':25, 'VF35':35, 'VF30':30, 'XF40':40, 'XF45':45, 'AU50':50, 'AU53':53, 'AU55':55, 'AU58':58, 'MS60':60, 'MS61':61, 'MS62':62, 'MS63':63, 'MS64':64, 'MS65':65, 'MS66':66, 'MS67':67, 'MS68':68, 'MS69':69, 'MS70':70, 'PO':1, 'po':1, 'Poor':1, 'poor':1, 'FR':2, 'fr':2, 'AG':3, 'ag':3, 'G':4, 'Good':4, 'good':4, 'VG':8, 'F':12, 'Fine':12, 'fine':12, 'VF':20, 'XF':40, 'AU':50,'BU':60, 'MS':60}
 
+numeric_grade_type = [1, 2, 3, 4, 6, 8, 10, 12, 15, 20, 25, 35, 30, 40, 45, 50, 53, 55, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70 ]
 reddit = praw.Reddit(user_agent="CoinGrade bot 0.1",
                      client_id="ik7ILQHFETC7QQ", client_secret="8fMRTIFaxMVOnXsUng94OYMkQdA",
                      username="coin_grader_bot", password="yitzchokrcgbot")
 
 track_comments = []
 
-subreddit=reddit.subreddit('testingground4bots')
+subreddit=reddit.subreddit('coinGradingTest')
 
 class sub_track:                            #to track bot's comment on a post
     
@@ -46,8 +47,8 @@ def check_metric(metric, grade):
     for x in metric:
         if(x in grade):
             return True
-    
-    return False
+        else:
+            return False
     
 submission_track = []       #tracks submissions which have been replied to and are less than or 3 days old
 grade_list = []             #contains grades of different comments
@@ -56,7 +57,6 @@ while(True):
     
     for submission in subreddit.new():
         
-        if(submission.title == 'Coin grading test'):             #temporary if statement for testing
             
             
             converted_submission_dt = datetime.datetime.utcfromtimestamp(submission.created_utc)
@@ -81,11 +81,14 @@ while(True):
                     
                     
                 metric_list = []
+                numeric_grade = []
                 
                 for comment in submission.comments:
                     if (comment.score >= 0 and  comment.id not in track_comments or comment.edited):
                         curr_comment = comment.body
                         metric_list.append(re.findall(r'\[(.*?)\]', curr_comment))
+                        number_metric = re.findall(r'\[([0-9]+?)\]', curr_comment)
+                        numeric_grade.append(number_metric)
                         metric_list = [x for x in metric_list if x]
                         track_comments.append(comment.id)
                 
@@ -94,11 +97,12 @@ while(True):
                         grade_list.append(x.strip('\\'))
                 
                 
-                numeric_grade = []
                 
                 for grade in grade_list:
-                    if(check_metric(grade, grade_types) ):
+                    if(check_metric(grade, grade_types)):
                         numeric_grade.append(grade_types[grade])
+                    elif(check_metric(grade, numeric_grade_type)):
+                        numeric_grade.append(grade)
                     else:
                         grade_list.remove(grade)
                 
@@ -118,6 +122,7 @@ while(True):
                     reddit.validate_on_submit = True
                     reddit.comment(y).edit(edited_comment)
                 
+                    
                 
             else:                                           #removes if post is more than  3 days old and in submission_track
                 for i in range(len(submission_track)) :                  
