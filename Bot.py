@@ -65,7 +65,7 @@ while(True):
             
             in_list = False
             
-            if(date_difference.days <= 3):
+            if(date_difference.days <= 4):
                 for old_submission in submission_track :           #check if this post has already been checked by bot
                     
                     if(old_submission.submission_id == submission.id):
@@ -73,7 +73,7 @@ while(True):
                         break
                 
                 if(not in_list):
-                    mycomment = submission.reply("Hi, I’m the RCG bot!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ")
+                    mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) if there is a bug*)")
                     mycomment.mod.distinguish(how='yes', sticky=True)               #distinguishes as a mod and sticks the comment
                     comment_id = mycomment.id
                     track_comments.append(comment_id)                       #tracking comment to edit
@@ -116,8 +116,11 @@ while(True):
                     average = int(mean(numeric_grade))
                     print(average)
                     final_avg = search_avg_grade(average)                 #finds the correspoding key in grade_types
-                    edited_comment = "Hi, I’m the RCG bot!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: " + datetime.datetime.now(tz).strftime('%d/%m/%y %I:%M:%S %p')
-                
+                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %M:%I:%S %p') + " EST* \n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) if there is a bug*)"
+                    
+                    if(date_difference.days == 4):
+                        edited_comment = edited_comment + "*This post is more than 3 days old so it will not be updated anymore*"
+                    
                     for x in submission_track:
                         if (x.submission_id == submission.id):
                             y = x.Mycomment_id
