@@ -6,3 +6,8 @@ PRAW library is used to interact with reddit objects of posts and comments.
 PRAW documentation: https://praw.readthedocs.io/en/latest/getting_started/quick_start.html
 
 Feel free to drop any questions on code, bugs or improvements.
+
+Contact me at:
+shikhindah@gmail.com
+
+Discord: fake_tourist#6442
