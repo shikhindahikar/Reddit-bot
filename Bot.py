@@ -18,13 +18,11 @@ alt_grade_types = ['PO', 'po', 'Poor', 'poor', 'FR', 'fr', 'AG', 'ag', 'G', 'g',
 
 numeric_grade_type = [1, 2, 3, 4, 6, 8, 10, 12, 15, 20, 25, 35, 30, 40, 45, 50, 53, 55, 58, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70 ]
 
-reddit = praw.Reddit(user_agent="CoinGrade bot 0.1",
-                     client_id="ik7ILQHFETC7QQ", client_secret="8fMRTIFaxMVOnXsUng94OYMkQdA",
-                     username="coin_grader_bot", password="yitzchokrcgbot")
+reddit = praw.Reddit("bot", user_agent="bot user agent")
 
 track_comments = []
 
-subreddit=reddit.subreddit('coinGradingTest')
+subreddit=reddit.subreddit('testingground4bots')
 
 class sub_track:                            #to track bot's comment on a post
     
@@ -74,7 +72,7 @@ while(True):
                 
                 if(not in_list):
                     mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) if there is a bug*)")
-                    mycomment.mod.distinguish(how='yes', sticky=True)               #distinguishes as a mod and sticks the comment
+                    #mycomment.mod.distinguish(how='yes', sticky=True)               #distinguishes as a mod and sticks the comment
                     comment_id = mycomment.id
                     track_comments.append(comment_id)                       #tracking comment to edit
                     obj = sub_track(submission.id, comment_id)              #creating objects for  tracking
@@ -85,7 +83,7 @@ while(True):
                 numeric_grade = []
                 
                 for comment in submission.comments:
-                    if (comment.score >= 0 and  comment.id and (comment.id not in track_comments) and (comment.author.name.lower()!="coin_grader_bot")):            #use author name, improve bot using this functionality 
+                    if (comment.score >= 0 and  comment.id and (comment.id not in track_comments) and (comment.author is not None and comment.author.name.lower()!="coin_grader_bot")):            #use author name, improve bot using this functionality 
                         curr_comment = comment.body
                         sub_str = re.findall(r'\[(.*?)\]', curr_comment)
                         if(sub_str):
@@ -116,7 +114,7 @@ while(True):
                     average = int(mean(numeric_grade))
                     print(average)
                     final_avg = search_avg_grade(average)                 #finds the correspoding key in grade_types
-                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %M:%I:%S %p') + " EST* \n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) if there is a bug*)"
+                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %I:%M:%S %p') + " EST* \n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) if there is a bug*)"
                     
                     if(date_difference.days == 4):
                         edited_comment = edited_comment + "*This post is more than 3 days old so it will not be updated anymore*"
