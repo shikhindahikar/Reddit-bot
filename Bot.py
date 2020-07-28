@@ -133,6 +133,6 @@ while(True):
             else:                                           #removes if post is more than  3 days old and in submission_track
                 for i in range(len(submission_track)) :                  
                     if(submission_track[i].submission_id == submission.id):
-                        remove_comment_id(submission(submission_track[i].submission_id), track_comments)
+                        remove_comment_id(reddit.submission(submission_track[i].submission_id), track_comments)
                         del submission_track[i]
             
