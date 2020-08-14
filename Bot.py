@@ -47,7 +47,7 @@ while(True):
                 bot_in_post = False                                 #flag if bot has commented on the post
                 
                 for comment in submission.comments:
-                    if ((comment.author is not None) and (comment.author.name.lower()=="coin_grader_bot")):
+                    if ((comment.author is not None) and (comment.author.name.lower()=="rcg_bot")):
                         bot_in_post = True
                         break
                             
@@ -59,7 +59,7 @@ while(True):
                 numeric_grade = []
                 
                 for comment in submission.comments:
-                    if (comment.score >= 0 and  comment.id and (comment.author is not None and comment.author.name.lower()!="coin_grader_bot")):            #use author name, improve bot using this functionality 
+                    if (comment.score >= 0 and  comment.id and (comment.author is not None and comment.author.name.lower()!="rcg_bot")):            #use author name, improve bot using this functionality 
                         curr_comment = comment.body
                         sub_str = re.findall(r'\[(.*?)\]', curr_comment)
                         if(sub_str):
@@ -96,7 +96,7 @@ while(True):
                         edited_comment = edited_comment + "*This post is more than 3 days old so it will not be updated anymore*"
                     
                     for comment in submission.comments:
-                        if (comment.author.name.lower()=="coin_grader_bot"):
+                        if (comment.author.name.lower()=="rcg_bot"):
                             reddit.validate_on_submit = True
                             reddit.comment(comment.id).edit(edited_comment)
                             break
