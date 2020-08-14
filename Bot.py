@@ -36,8 +36,6 @@ while(True):
     
     for submission in subreddit.new():
         
-            
-            
             converted_submission_dt = datetime.datetime.utcfromtimestamp(submission.created_utc)
             current_time_utc = datetime.datetime.utcnow()
             
@@ -52,7 +50,7 @@ while(True):
                             
                 if(not bot_in_post):
                     mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) if there is a bug*)")
-                    #mycomment.mod.distinguish(how='yes', sticky=True)
+                    mycomment.mod.distinguish(how='yes', sticky=True)
                     
                     
                 numeric_grade = []
