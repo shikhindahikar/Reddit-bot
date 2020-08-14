@@ -6,6 +6,8 @@ VERSION -1.0:
   
   Fixed crashing issue.
 
+
+
 VERSION -BETA:
   
   Does averages of all grades.
