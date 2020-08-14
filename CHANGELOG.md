@@ -1,11 +1,11 @@
 
 
-version -1.0:
+VERSION -1.0:
   
   Doesn't comment twice on the same post
   fixed crashing issue
 
-version -beta:
+VERSION -BETA:
   
   Does averages of all grades.
   
