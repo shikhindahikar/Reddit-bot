@@ -4,6 +4,8 @@ VERSION -1.0:
   
   Doesn't comment twice on the same post.
   
+  Added google form in comment string.
+  
   Fixed crashing issue.
   
   Hidden the client secret, password, etc in praw.ini file for security purposes.
