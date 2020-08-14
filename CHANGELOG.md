@@ -2,8 +2,9 @@
 
 VERSION -1.0:
   
-  Doesn't comment twice on the same post
-  fixed crashing issue
+  Doesn't comment twice on the same post.
+  
+  Fixed crashing issue.
 
 VERSION -BETA:
   
