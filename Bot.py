@@ -20,8 +20,8 @@ numeric_grade_type = [1, 2, 3, 4, 6, 8, 10, 12, 15, 20, 25, 35, 30, 40, 45, 50, 
 
 reddit = praw.Reddit("bot", user_agent="bot user agent")
 
-subreddit=reddit.subreddit('coinGradingTest')
-        
+subreddit=reddit.subreddit('redditCoinGrading')
+
 def search_avg_grade(avg):
     for key in grade_types:
         if(grade_types[key] == avg):
@@ -29,80 +29,79 @@ def search_avg_grade(avg):
         elif(grade_types[key] >= avg):
             return key
 
-    
+
 grade_list = []             #contains grades of different comments
-    
+
 while(True):
-    
+
     for submission in subreddit.new():
-        
-            
-            
+
+
+
             converted_submission_dt = datetime.datetime.utcfromtimestamp(submission.created_utc)
             current_time_utc = datetime.datetime.utcnow()
-            
+
             date_difference = current_time_utc - converted_submission_dt
-            
+
             if(date_difference.days <= 7):
                 bot_in_post = False                                 #flag if bot has commented on the post
-                
+
                 for comment in submission.comments:
-                    if ((comment.author is not None) and (comment.author.name.lower()=="rcg_bot")):
+                    if ((comment.author is not None) and (comment.author.name=="RCG_bot")):
                         bot_in_post = True
                         break
-                            
+
                 if(bot_in_post==False):
-                    mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)")
+                    mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact the moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)")
                     mycomment.mod.distinguish(how='yes', sticky=True)
-                    
-                    
+
+
                 numeric_grade = []
-                
+
                 for comment in submission.comments:
-                    if (comment.score >= 0 and  comment.id and (comment.author is not None and comment.author.name.lower()!="rcg_bot")):            #use author name, improve bot using this functionality 
+                    if (comment.score >= 0 and  comment.id and (comment.author is not None) and (comment.author.name!="RCG_bot")):            #use author name, improve bot using this functionality
                         curr_comment = comment.body
                         sub_str = re.findall(r'\[(.*?)\]', curr_comment)
                         if(sub_str):
                             number_metric = re.findall('[0-9]+', sub_str[0])
-                        
+
                             if(number_metric):
                                 numeric_grade.append(int(number_metric[0]))
                             else:
                                 for alt in alt_grade_types:
                                     if(alt in sub_str[0].lower()):                      #po and poor bug
                                         if((alt=='po' and 'poor' in sub_str[0].lower()) or (alt=='f' and 'fine' in sub_str[0].lower()) or (alt=='f' and 'vf' in sub_str[0].lower()) or (alt=='g' and 'vg' in sub_str[0].lower()) or (alt=='f' and 'xf' in sub_str[0].lower()) or (alt=='f' and 'pf' in sub_str[0].lower())):
-                                            continue    
-                                        else: 
+                                            continue
+                                        else:
                                             numeric_grade.append(grade_types[alt])
-                                        
-                            
-                
+
+
+
                         del sub_str[:]
-                        
-                
+
+
                 print(numeric_grade)
-                
+
                 for num in numeric_grade:
                     if(num not in numeric_grade_type):
                         numeric_grade.remove(num)
-                
+
                 if(numeric_grade):                             #control block which edits comment
                     average = int(mean(numeric_grade))
                     print(average)
                     final_avg = search_avg_grade(average)                 #finds the correspoding key in grade_types
-                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %I:%M:%S %p') + " EST* \n\n ^(*I'm a bot and this action was performed automatically. Please [contact moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)"
-                    
+                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %I:%M:%S %p') + " EST* \n\n ^(*I'm a bot and this action was performed automatically. Please [contact the moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)"
+
                     if(date_difference.days == 7):
-                        edited_comment = edited_comment + "*This post is more than 3 days old so it will not be updated anymore*"
-                    
+                        edited_comment = edited_comment + "\n\n^(This post is more than 7 days old, and will not be updated.)"
+
                     for comment in submission.comments:
-                        if (comment.author.name.lower()=="rcg_bot"):
+                        if (comment.author is not None and comment.author.name=="RCG_bot"):
                             reddit.validate_on_submit = True
                             reddit.comment(comment.id).edit(edited_comment)
                             break
-                        
-                    
-                
-                    
-                
-            
+
+
+
+
+
