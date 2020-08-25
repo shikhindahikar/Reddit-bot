@@ -52,7 +52,7 @@ while(True):
                         break
 
                 if(bot_in_post==False):
-                    mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact the moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)")
+                    mycomment = submission.reply("Hi, I’m the RCG bot (beta)!\n\nPlease read the rules how to have your grade counted.\n\nThank you, and happy collecting!\n\n ^(*I'm a bot and this action was performed automatically. Please [contact the moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)")
                     mycomment.mod.distinguish(how='yes', sticky=True)
 
 
@@ -90,17 +90,16 @@ while(True):
                     average = int(mean(numeric_grade))
                     print(average)
                     final_avg = search_avg_grade(average)                 #finds the correspoding key in grade_types
-                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin, according to the community, grades as follows: \n #" + final_avg +"\n\nThis comment will be updated every five minutes to include the rounded average of the grades submitted by the community.\n\nTo have your grade counted, please put your grade and designation in square brackets, like this: [MS62 rd] [xf40 cleaned] [f12+] etc, and continue writing any other descriptions and opinions outside the brackets.\n\nThank you, and happy collecting!\n\n " + "\n\n*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %I:%M:%S %p') + " EST* \n\n ^(*I'm a bot and this action was performed automatically. Please [contact the moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)"
+                    edited_comment = "Hi, I’m the RCG bot (beta)!\n\n" + "This coin grades as follows: \n #" + final_avg +"\n\nPlease read the rules how to have your grade counted.\n\n " + "\n\n^(*Last updated*: *" + datetime.datetime.now(tz).strftime('%m/%d/%y %I:%M:%S %p') + " EST*) \n\n ^(*I'm a bot and this action was performed automatically. Please [contact the moderators](https://www.reddit.com/message/compose/?to=/r/redditcoingrading) or [fill out this form](https://forms.gle/HtoDquWoqRAy9DWdA) if there is a bug*)"
 
                     if(date_difference.days == 7):
-                        edited_comment = edited_comment + "\n\n^(This post is more than 7 days old, and will not be updated.)"
+                        edited_comment = edited_comment + "\n\n^(This post is more than 7 days old, and will no longer be updated.)"
 
                     for comment in submission.comments:
                         if (comment.author is not None and comment.author.name=="RCG_bot"):
                             reddit.validate_on_submit = True
                             reddit.comment(comment.id).edit(edited_comment)
                             break
-
 
 
 
